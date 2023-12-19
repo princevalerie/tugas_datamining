@@ -10,13 +10,13 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 import pickle
 
-# Load the dataset
+# Load the heart disease dataset
 @st.cache
 def load_data():
     data = pd.read_csv("heart_attack.csv")
     return data
 
-# Data preprocessing function
+# Data preprocessing function for heart disease
 def preprocess_data(data):
     # Drop duplicate data
     data = data.drop_duplicates()
@@ -31,7 +31,7 @@ def preprocess_data(data):
     x_data_normalized = scaler.fit_transform(x_data)
     return x_data_normalized, y_target
 
-# Model training function
+# Model training function for heart disease
 def train_models(X_train, y_train):
     # Decision Tree model
     decision_tree = DecisionTreeClassifier(ccp_alpha=0.0, class_weight=None, criterion='entropy', max_depth=4,
@@ -57,97 +57,166 @@ def train_models(X_train, y_train):
     
     return decision_tree, best_knn, naive_bayes
 
-# Evaluate model function
+# Evaluate model function for heart disease
 def evaluate_model(model, X_test, y_test, model_name):
     y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     st.sidebar.write(f"{model_name} Accuracy: {accuracy:.2%}")
     return accuracy
 
-# Confusion matrix and classification report function
+# Confusion matrix and classification report function for heart disease
 def get_confusion_matrix_and_report(model, X_test, y_test):
     y_pred = model.predict(X_test)
     cm = confusion_matrix(y_test, y_pred)
     report = classification_report(y_test, y_pred, target_names=['negative', 'positive'])
     return cm, report
 
-# Main function to run the Streamlit app
-def main():
+# Main function to run the Streamlit app for heart disease prediction
+def main_heart_disease():
     st.title("Heart Disease Prediction Web App")
     st.sidebar.title("Features")
 
-    # Load data
+    # Load heart disease data
     data = load_data()
 
-    # Display dataset
-    if st.sidebar.checkbox("Show Dataset"):
+    # Display heart disease dataset
+    if st.sidebar.checkbox("Show Heart Disease Dataset"):
         st.write("### Heart Disease Dataset")
         st.dataframe(data)
 
-    # Data preprocessing
+    # Data preprocessing for heart disease
     st.sidebar.title("Data Preprocessing")
 
-    # Preprocess data
+    # Preprocess heart disease data
     X, y = preprocess_data(data)
 
     # Split data into train and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-    # Model training
+    # Model training for heart disease
     st.sidebar.title("Model Training")
 
-    # Train models
+    # Train models for heart disease
     decision_tree, best_knn, naive_bayes = train_models(X_train, y_train)
 
-    # Save the models
-    with open('decision_tree_model.pkl', 'wb') as model_file:
+    # Save the models for heart disease
+    with open('heart_decision_tree_model.pkl', 'wb') as model_file:
         pickle.dump(decision_tree, model_file)
-    with open('knn_model.pkl', 'wb') as model_file:
+    with open('heart_knn_model.pkl', 'wb') as model_file:
         pickle.dump(best_knn, model_file)
-    with open('naive_bayes_model.pkl', 'wb') as model_file:
+    with open('heart_naive_bayes_model.pkl', 'wb') as model_file:
         pickle.dump(naive_bayes, model_file)
 
-    st.sidebar.success("Models trained and saved!")
+    st.sidebar.success("Heart Disease Models trained and saved!")
 
-    # Model evaluation
+    # Model evaluation for heart disease
     st.sidebar.title("Model Evaluation")
 
-    # Evaluate Decision Tree model
+    # Evaluate Decision Tree model for heart disease
     decision_tree_accuracy = evaluate_model(decision_tree, X_test, y_test, "Decision Tree")
 
-    # Evaluate KNN model
+    # Evaluate KNN model for heart disease
     knn_accuracy = evaluate_model(best_knn, X_test, y_test, "K-Nearest Neighbors (KNN)")
 
-    # Evaluate Naive Bayes model
+    # Evaluate Naive Bayes model for heart disease
     naive_bayes_accuracy = evaluate_model(naive_bayes, X_test, y_test, "Naive Bayes")
 
-    # Confusion matrix and classification report
+    # Confusion matrix and classification report for heart disease
     st.sidebar.title("Confusion Matrix and Classification Report")
 
-    # Display confusion matrix and classification report for Decision Tree
+    # Display confusion matrix and classification report for Decision Tree for heart disease
     decision_tree_cm, decision_tree_report = get_confusion_matrix_and_report(decision_tree, X_test, y_test)
-    st.write("### Decision Tree")
+    st.write("### Decision Tree for Heart Disease")
     st.write("#### Confusion Matrix")
     st.write(decision_tree_cm)
     st.write("#### Classification Report")
     st.write(decision_tree_report)
 
-    # Display confusion matrix and classification report for KNN
+    # Display confusion matrix and classification report for KNN for heart disease
     knn_cm, knn_report = get_confusion_matrix_and_report(best_knn, X_test, y_test)
-    st.write("### K-Nearest Neighbors (KNN)")
+    st.write("### K-Nearest Neighbors (KNN) for Heart Disease")
     st.write("#### Confusion Matrix")
     st.write(knn_cm)
     st.write("#### Classification Report")
     st.write(knn_report)
 
-    # Display confusion matrix and classification report for Naive Bayes
+    # Display confusion matrix and classification report for Naive Bayes for heart disease
     naive_bayes_cm, naive_bayes_report = get_confusion_matrix_and_report(naive_bayes, X_test, y_test)
-    st.write("### Naive Bayes")
+    st.write("### Naive Bayes for Heart Disease")
     st.write("#### Confusion Matrix")
     st.write(naive_bayes_cm)
     st.write("#### Classification Report")
     st.write(naive_bayes_report)
 
-if __name__ == "__main__":
-    main()
+# ... (previous code)
 
+# Main function to run the Streamlit app for diabetes prediction
+def main_diabetes():
+    st.title("Prediksi Diabetes Menggunakan 3 Model Machine Learning")
+
+    age = st.number_input('Input Umur', value=64, step=1)
+
+    # Convert gender to 0 or 1
+    gender = st.selectbox('Input Gender', ['Male', 'Female'])
+    gender = 0 if gender == 'Female' else 1
+
+    impluse = st.number_input('Input impluse', value=66, step=1)
+    pressurehight = st.number_input('Input pressurehight', value=160, step=1)
+    pressurelow = st.number_input('Input pressurelow', value=83, step=1)
+    glucose = st.number_input('Input glucose', value=160.0, step=1.0)
+    kcm = st.number_input('Input kcm', value=1.80, step=0.01)
+    troponin = st.number_input('Input troponin', value=0.012, step=0.001)
+
+    # Load the diabetes model
+    with open('loaded_model_diabetes.pkl', 'rb') as model_file:
+        loaded_model_diabetes = pickle.load(model_file)
+
+    diagnosis_dtr = ''
+    diagnosis_knn = ''
+    diagnosis_nb = ''
+
+    if st.button('Test Prediksi Diabetes'):
+        input_data = [[age, gender, impluse, pressurehight, pressurelow, glucose, kcm, troponin]]
+
+        # Convert input_data to a numpy array
+        input_data_asarray = np.asarray(input_data)
+
+        # Reshape the input_data_asarray
+        input_reshaped = input_data_asarray.reshape(1, -1)
+
+        # Use the loaded model for heart disease prediction
+        with open('heart_decision_tree_model.pkl', 'rb') as model_file:
+            loaded_model_heart_dtr = pickle.load(model_file)
+        with open('heart_knn_model.pkl', 'rb') as model_file:
+            loaded_model_heart_knn = pickle.load(model_file)
+        with open('heart_naive_bayes_model.pkl', 'rb') as model_file:
+            loaded_model_heart_nb = pickle.load(model_file)
+
+        prediction_dtr = loaded_model_heart_dtr.predict(input_reshaped)
+        prediction_knn = loaded_model_heart_knn.predict(input_reshaped)
+        prediction_nb = loaded_model_heart_nb.predict(input_reshaped)
+
+        if prediction_dtr[0] == 1:
+            diagnosis_dtr = "Pasien terkena diabetes (dtr)"
+        else:
+            diagnosis_dtr = "Pasien tidak terkena diabetes (dtr)"
+
+        if prediction_knn[0] == 1:
+            diagnosis_knn = "Pasien terkena diabetes (knn)"
+        else:
+            diagnosis_knn = "Pasien tidak terkena diabetes (knn)"
+
+        if prediction_nb[0] == 1:
+            diagnosis_nb = "Pasien terkena diabetes (nb)"
+        else:
+            diagnosis_nb = "Pasien tidak terkena diabetes (nb)"
+
+    st.write(diagnosis_dtr)
+    st.write(diagnosis_knn)
+    st.write(diagnosis_nb)
+
+
+# Run both main functions if the script is executed
+if __name__ == "__main__":
+    main_heart_disease()
+    main_diabetes()
